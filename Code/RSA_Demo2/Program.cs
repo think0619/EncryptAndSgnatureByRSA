@@ -59,9 +59,8 @@ class RSACSPSample
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
             str_Public_Key = Convert.ToBase64String(RSA.ExportCspBlob(false));
-            str_Private_Key = Convert.ToBase64String(RSA.ExportCspBlob(true));
-           
-            //OAEP padding is only available on Microsoft Windows XP or later.  
+            str_Private_Key = Convert.ToBase64String(RSA.ExportCspBlob(true)); 
+
             byte[] bytes_Cypher_Text = RSA.Encrypt(DataToEncrypt, false);
             str_Public_Key = Convert.ToBase64String(RSA.ExportCspBlob(false));
             str_Private_Key = Convert.ToBase64String(RSA.ExportCspBlob(true));

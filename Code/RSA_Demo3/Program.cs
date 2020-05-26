@@ -41,8 +41,8 @@ namespace R3
                 Console.WriteLine();
                 Console.WriteLine("私钥：" + str_Private_Key);
                 Console.WriteLine();
-                string str_SignedData = HashAndSign("x", "BgIAAACkAABSU0ExAAQAAAEAAQAhmButqdiSZAuH9GvDglIQU4slmYtNzMBIdrZ1GJsCyY8LFL3NHd5AnZ848Z2CudAOMeoHEAOCpYqtLf2ufrkTtTQAYRFchHWQKWPPO9Lwec6cS2iKxH5bK2oNbHe6S7OKtIdEeu3T6KaX7aCbRusfSaYubXIrLyqrgXcRsNnlwQ==");
-             //   string str_SignedData = HashAndSign(str_DataToSign, str_Private_Key);// Hash and sign the data.
+              
+                string str_SignedData = HashAndSign(str_DataToSign, str_Private_Key);// Hash and sign the data.
                 Console.WriteLine("签名数据：" + str_SignedData);
                 Console.WriteLine();
 

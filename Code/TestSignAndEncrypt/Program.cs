@@ -14,15 +14,12 @@ namespace TestSignAndEncrypt
         static void Main(string[] args)
         {
             try
-            {
-
-                string str_DataToSign = @"Data to Sign!Data to Sign!Data to Sign!";
-                Console.WriteLine("Data: " + str_DataToSign);
-                Console.WriteLine("Data Length: " + str_DataToSign.Length.ToString());
+            { 
+                string str_DataToSign = @"Test data";
+                Console.WriteLine("Data: " + str_DataToSign); 
                 Console.WriteLine();
 
-                RSACryptoServiceProvider Alice_RSAalg = new RSACryptoServiceProvider();
-
+                RSACryptoServiceProvider Alice_RSAalg = new RSACryptoServiceProvider(); 
                 string Alice_Private_Key = Convert.ToBase64String(Alice_RSAalg.ExportCspBlob(true));
                 string Alice_Public_Key = Convert.ToBase64String(Alice_RSAalg.ExportCspBlob(false));
                 Console.WriteLine("Alice's Public Key: " + Alice_Public_Key);
@@ -30,8 +27,7 @@ namespace TestSignAndEncrypt
                 Console.WriteLine("Alice's Private Key: " + Alice_Private_Key);
                 Console.WriteLine();
 
-                RSACryptoServiceProvider Bob_RSAalg = new RSACryptoServiceProvider();
-
+                RSACryptoServiceProvider Bob_RSAalg = new RSACryptoServiceProvider(); 
                 string Bob_Private_Key = Convert.ToBase64String(Bob_RSAalg.ExportCspBlob(true));
                 string Bob_Public_Key = Convert.ToBase64String(Bob_RSAalg.ExportCspBlob(false));
                 Console.WriteLine("Bob's Public Key: " + Bob_Public_Key);
@@ -41,33 +37,18 @@ namespace TestSignAndEncrypt
 
 
                 //Step 1. Alice对Data签名
-                string signedDate = R3.RSACSPSample.HashAndSign(str_DataToSign,Alice_Private_Key);
-                var len1 = signedDate.Length;
+                string signedDate = HashAndSign(str_DataToSign, Alice_Private_Key);
                 //Step 2. Alice用Bob公钥加密
-                string EnryptedData = RSA_Encrypt(signedDate, Bob_Public_Key);
-                var len2 = signedDate.Length;
+                string EnryptedData = RSA_Encrypt(str_DataToSign, Bob_Public_Key);
+
                 //Bob 接收数据
                 //Step 3: 用Bob私钥解密
-                string DecryptData=RSA_Decrypt(EnryptedData, Bob_Private_Key);
-                //Step 4: 验证签名
+                string DecryptData = RSA_Decrypt(EnryptedData, Bob_Private_Key);
+                //Step 4: 验证签名 
+                var varifyresult =  VerifySignedHash(DecryptData, str_DataToSign, Alice_Public_Key);
+                
+                Console.WriteLine(String.Format("验证{0}", varifyresult ? "成功" : "失败"));
 
-                var x = R3.RSACSPSample.VerifySignedHash(str_DataToSign, DecryptData, Alice_Public_Key);
-
-
-
-                ////Sign by Alice Private Key
-                //string str_SignedData =R3.RSACSPSample.HashAndSign(str_DataToSign, Alice_Private_Key);// Hash and sign the data.
-                //Console.WriteLine("Data Digital Signatures: " + str_SignedData);
-                //Console.WriteLine();
-
-                //if (R3.RSACSPSample.VerifySignedHash(str_DataToSign, str_SignedData, Alice_Public_Key))
-                //{
-                //    Console.WriteLine("Signature is OK.");
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Wrong!");
-                //}
                 Console.Read();
 
             }
@@ -87,15 +68,14 @@ namespace TestSignAndEncrypt
         static public string RSA_Encrypt(string str_Plain_Text,  string str_Public_Key)
         {
             UnicodeEncoding ByteConverter = new UnicodeEncoding();
-            byte[] DataToEncrypt = ByteConverter.GetBytes(str_Plain_Text);
-             DataToEncrypt =Zip(DataToEncrypt);
+            byte[] DataToEncrypt = ByteConverter.GetBytes(str_Plain_Text); 
             try
             {
                 RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
                 byte[] bytes_Public_Key = Convert.FromBase64String(str_Public_Key);
                 RSA.ImportCspBlob(bytes_Public_Key);
 
-                //OAEP padding is only available on Microsoft Windows XP or later.  
+             
                 byte[] bytes_Cypher_Text = RSA.Encrypt(DataToEncrypt, true);
                 string str_Cypher_Text = Convert.ToBase64String(bytes_Cypher_Text);
                 return str_Cypher_Text;
@@ -114,12 +94,10 @@ namespace TestSignAndEncrypt
             try
             {
                 RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-                //RSA.ImportParameters(RSAKeyInfo);
                 byte[] bytes_Private_Key = Convert.FromBase64String(str_Private_Key);
                 RSA.ImportCspBlob(bytes_Private_Key);
-
-                //OAEP padding is only available on Microsoft Windows XP or later.  
-                byte[] bytes_Plain_Text = RSA.Decrypt(DataToDecrypt, false);
+                 
+                byte[] bytes_Plain_Text = RSA.Decrypt(DataToDecrypt, true);
                 UnicodeEncoding ByteConverter = new UnicodeEncoding();
                 string str_Plain_Text = ByteConverter.GetString(bytes_Plain_Text);
                 return str_Plain_Text;
@@ -131,41 +109,47 @@ namespace TestSignAndEncrypt
             }
         }
 
-        public static byte[] Zip(byte[] bytes)
+        //对数据签名
+        public static string HashAndSign(string str_DataToSign, string str_Private_Key)
         {
-            //var bytes = System.Text.Encoding.UTF8.GetBytes(str);
-            using (var msi = new MemoryStream(bytes))
-            using (var mso = new MemoryStream())
+            ASCIIEncoding ByteConverter = new ASCIIEncoding();
+            byte[] DataToSign = ByteConverter.GetBytes(str_DataToSign);
+            try
             {
-                using (var gs = new GZipStream(mso, CompressionMode.Compress))
-                {
-                    CopyTo(msi, gs);
-                }
-                return mso.ToArray();
+                RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
+                RSAalg.ImportCspBlob(Convert.FromBase64String(str_Private_Key));
+                byte[] signedData = RSAalg.SignData(DataToSign, new SHA1CryptoServiceProvider());
+                string str_SignedData = Convert.ToBase64String(signedData);
+                var lenth = str_SignedData.Length;
+                return str_SignedData;
             }
-        }
-        public static string Unzip(byte[] bytes)
-        {
-            using (var msi = new MemoryStream(bytes))
-            using (var mso = new MemoryStream())
+            catch (CryptographicException e)
             {
-                using (var gs = new GZipStream(msi, CompressionMode.Decompress))
-                {
-                    CopyTo(gs, mso);
-                }
-                return System.Text.Encoding.UTF8.GetString(mso.ToArray());
+                Console.WriteLine(e.Message);
+                return null;
             }
         }
 
-        public static void CopyTo(Stream src, Stream dest)
+        //验证签名
+        public static bool VerifySignedHash(string str_DataToVerify, string str_SignedData, string str_Public_Key)
         {
-            byte[] bytes = new byte[4096];
+            byte[] SignedData = Convert.FromBase64String(str_SignedData);
 
-            int cnt;
-
-            while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0)
+            ASCIIEncoding ByteConverter = new ASCIIEncoding();
+            byte[] DataToVerify = ByteConverter.GetBytes(str_DataToVerify);
+            try
             {
-                dest.Write(bytes, 0, cnt);
+                RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
+                RSAalg.ImportCspBlob(Convert.FromBase64String(str_Public_Key));
+
+                return RSAalg.VerifyData(DataToVerify, new SHA1CryptoServiceProvider(), SignedData);
+
+            }
+            catch (CryptographicException e)
+            {
+                Console.WriteLine(e.Message);
+
+                return false;
             }
         }
     }
