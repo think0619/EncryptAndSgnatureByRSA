@@ -11,28 +11,27 @@ namespace EncryptSign.Entity
         public int ID { get; set; }
 
         /// <summary>
-        /// Uid of Sender
+        /// ID of Sender
         /// </summary>
-        public string SenderUid { get; set; }
+        public int SenderID { get; set; }
 
         public string SenderName { get; set; }
 
+        public string SendeUid { get; set; }
         /// <summary>
-        /// Uid of Receiver
+        ///ID of Receiver
         /// </summary>
-        public string ReceicerUid { get; set; }
-
-        public string ReceicerName { get; set; }
+        public int ReceiverID { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public DateTime SentTime { get; set; }
 
         /// <summary>
         /// Cleartext
         /// </summary>
-        public string MessageCleartext { get; set; }
+        public string MessagePlaintext { get; set; }
 
         /// <summary>
         /// Ciphertext
@@ -43,6 +42,11 @@ namespace EncryptSign.Entity
         /// Signature
         /// </summary>
         public string MessageSignature { get; set; }
+     
         
+        /// <summary>
+        /// 1:未读 2：已读
+        /// </summary>
+        public int Status { get; set; }
     }
 }

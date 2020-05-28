@@ -31,6 +31,7 @@ namespace EncryptSign.Entity
         public string PublicKey { get; set; }
         public string PrivateKey { get; set; }
 
+        public string PwdHash { get; set; }
         /// <summary>
         /// Private Key,Generated from PKG
         /// </summary>

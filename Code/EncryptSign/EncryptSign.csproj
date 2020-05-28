@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Animator, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Animator.1.0.3\lib\net20\Animator.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.DynamicProxy, Version=1.1.5.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\IBatisNet.1.0.0\lib\net20\Castle.DynamicProxy.dll</HintPath>
     </Reference>
@@ -67,26 +70,49 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\FontLoader.cs" />
+    <Compile Include="Classes\NativeMethods.cs" />
+    <Compile Include="EncryptFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EncryptFrm.Designer.cs">
+      <DependentUpon>EncryptFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\NativeMethods.cs" />
     <Compile Include="Entity\SendMessage.cs" />
     <Compile Include="Entity\User.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Frm_Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Frm_Login.designer.cs">
+      <DependentUpon>Frm_Login.cs</DependentUpon>
     </Compile>
     <Compile Include="Handler\BaseDAL.cs" />
+    <Compile Include="Handler\CommonHandle.cs" />
+    <Compile Include="Handler\RSAHelper.cs" />
     <Compile Include="JsonHelper.cs" />
-    <Compile Include="MainFrm.cs">
+    <Compile Include="MessageFrm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainFrm.Designer.cs">
-      <DependentUpon>MainFrm.cs</DependentUpon>
+    <Compile Include="MessageFrm.Designer.cs">
+      <DependentUpon>MessageFrm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainFrm.resx">
-      <DependentUpon>MainFrm.cs</DependentUpon>
+    <Compile Include="RegisterFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegisterFrm.Designer.cs">
+      <DependentUpon>RegisterFrm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="EncryptFrm.resx">
+      <DependentUpon>EncryptFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_Login.resx">
+      <DependentUpon>Frm_Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MessageFrm.resx">
+      <DependentUpon>MessageFrm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -98,8 +124,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RegisterFrm.resx">
+      <DependentUpon>RegisterFrm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Map\op.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -113,7 +143,9 @@
     </Compile>
     <None Include="providers.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
+    <None Include="Resources\Raleway-Light.ttf" />
     <None Include="SqlMap.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -122,16 +154,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RSA_GenKey\RSA_GenKey.csproj">
-      <Project>{c23c9cdf-80ac-4c0a-876a-662aa5e33252}</Project>
-      <Name>RSA_GenKey</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RSA_Signature\RSA_Signature.csproj">
-      <Project>{a0cac03d-a08e-4691-991f-6387db25b6cb}</Project>
-      <Name>RSA_Signature</Name>
+    <ProjectReference Include="..\XRails-LoginUI\XRails-LoginUI.csproj">
+      <Project>{dc320fb7-7b0f-45d7-b30f-9ec2556e4ce1}</Project>
+      <Name>XRails-LoginUI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Data\db.mdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
