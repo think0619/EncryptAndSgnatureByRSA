@@ -145,7 +145,9 @@ namespace EncryptSign
                         Name = usernametxt.Trim(),
                         PwdHash = CommonHandle.sha256_hash(passwordtxt)
                     };
-                    RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
+                    CspParameters cspParams = new CspParameters();
+                    cspParams.KeyContainerName = newuser.Uid;
+                    RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider(2048,cspParams); 
                     newuser.PrivateKey = Convert.ToBase64String(RSAalg.ExportCspBlob(true));
                     newuser.PublicKey = Convert.ToBase64String(RSAalg.ExportCspBlob(false));
                     BaseDAL.InsertWithNoResult("InsertNewUser", newuser);

@@ -12,11 +12,14 @@ namespace RSA_GenKey
         /// <summary>
         /// 生成RSA公钥和私钥
         /// </summary>
+        /// <param name="user_uid">用户身份信息，如用户名、邮箱等</param>
         /// <param name="str_Public_Key">公钥(转为Base64编码)</param>
         /// <param name="str_Private_Key">私钥(转为Base64编码)</param>
-        public static void generateKey(out string str_Public_Key, out string str_Private_Key)
+        public static void generateKey(string user_uid,out string str_Public_Key, out string str_Private_Key)
         {
-            RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider(); 
+            CspParameters cspParams = new CspParameters();
+            cspParams.KeyContainerName = user_uid;
+            RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider(cspParams); 
             str_Private_Key = Convert.ToBase64String(RSAalg.ExportCspBlob(true));
             str_Public_Key = Convert.ToBase64String(RSAalg.ExportCspBlob(false)); 
         }

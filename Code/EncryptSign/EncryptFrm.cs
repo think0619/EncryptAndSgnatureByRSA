@@ -48,34 +48,8 @@ namespace EncryptSign
             this.dataGridView1.Columns[1].Width = 150;
             this.dataGridView1.Columns[2].Width = 200;
             this.dataGridView1.Columns[3].Width = 200;
-            this.dataGridView1.Columns[4].Visible = false;
-
-            //绑定数据
-            // this.dataGridView1.Rows.Clear();
-            //IList<SendMessage> receiveList = BaseDAL.QueryForList<SendMessage>("QueryAllReceiceMsgList", LoginUser.ID);
-            //if (receiveList != null && receiveList.Count() > 0)
-            //{
-            //    foreach (SendMessage msg in receiveList)
-            //    {
-            //        var msgStatus = string.Empty;
-            //        if (msg.Status == 1)
-            //        {
-            //            msgStatus = "未读";
-            //        }
-            //        else if (msg.Status == 2)
-            //        {
-            //            msgStatus = "已读";
-            //        }
-            //        string[] rowItem = new string[] {
-            //            msgStatus,
-            //            msg.SenderName,
-            //            msg.SendeUid,
-            //            (msg.SentTime!=null &&msg.SentTime!=DateTime.MinValue)?msg.SentTime.ToString("yyyy-MM-dd HH:mm:ss"):"",
-            //            msg.ID.ToString()
-            //        };
-            //        this.dataGridView1.Rows.Add(rowItem);
-            //    }
-            //}  
+            this.dataGridView1.Columns[4].Visible = false; 
+           
             refreshDatagrid(this.dataGridView1);
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.AllowUserToAddRows = false; 
@@ -151,6 +125,12 @@ namespace EncryptSign
                     checkmsg = false;
                     XtraMessageBox.Show(String.Format(@"请输入发送的消息"), "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+                else if (MeassageMemoEdit.Text.Length>100)
+                {
+                    checkmsg = false;
+                    XtraMessageBox.Show(String.Format(@"发送消息的长度不要超过100位"), "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
             }
             else
             {
